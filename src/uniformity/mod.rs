@@ -1,0 +1,16 @@
+pub mod avalanche;
+pub mod chi_bit;
+pub mod chi_byte;
+pub mod compression;
+pub mod gaps;
+pub mod ks;
+pub mod mean_byte;
+pub mod monobit;
+pub mod pi;
+pub mod prediction;
+pub mod runs;
+pub mod runups;
+pub mod sanity;
+pub mod shannon;
+pub mod shells;
+pub mod uncorrelation;
