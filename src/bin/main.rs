@@ -36,9 +36,9 @@ fn main() -> io::Result<()> {
     }
 
     println!("\nTesting {} bytes from {}.", input_data.len(), source);
-    println!("-----------------------------------------------------");
-    println!("Randomness Test     Observation  Z-Score P-Value Pass");
-    println!("-----------------------------------------------------");
+    println!("--------------------------------------------------------");
+    println!("Randomness Test           Value   Z-Score   P-Value Pass");
+    println!("--------------------------------------------------------");
 
     let mut passed_tests = 0;
     let alpha = 0.01;
@@ -49,7 +49,6 @@ fn main() -> io::Result<()> {
     // Run each test with the appropriate handling
     let tests = [
         ("Shannon",       Onod::shannon(&input_data)),
-        ("Sanity",        Onod::sanity(&input_data)),
         ("Monobit",       Onod::monobit(&input_data)),
         ("ChiBit",        Onod::chi_bit(&input_data)),
         ("ChiByte",       Onod::chi_byte(&input_data)),
@@ -79,7 +78,7 @@ fn main() -> io::Result<()> {
         };
 
         println!(
-            "{:<15} {:>15.3}  {:>8.4}  {:.4}  {}",
+            "{:<15} {:>15.3}  {:>8.4}  {:>7.4}  {:>2}",
             test_name, observation, z_score, p_value, result
         );
 
@@ -88,9 +87,9 @@ fn main() -> io::Result<()> {
         p_values.push(*p_value);
     }
 
-    println!("-----------------------------------------------------");
+    println!("--------------------------------------------------------");
     println!("{}/{} tests passed.", passed_tests, tests.len());
-    println!("-----------------------------------------------------");
+    println!("--------------------------------------------------------");
 
     Ok(())
 }

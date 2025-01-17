@@ -10,7 +10,6 @@ pub mod pi;
 pub mod prediction;
 pub mod runs;
 pub mod runups;
-pub mod sanity;
 pub mod shannon;
 pub mod shells;
 pub mod uncorrelation;
