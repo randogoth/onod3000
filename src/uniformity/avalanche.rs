@@ -6,12 +6,12 @@ impl Onod {
 
     /// Avalanche randomness test
     /// Compares the bit-level differences between consecutive chunks of data and returns a p-value.
-    pub fn avalanche(samples: &[u8]) -> f64 {
+    pub fn avalanche(samples: &[u8]) -> (f64, f64, f64) {
 
         const XOR_WINDOW_SIZE: usize = 20; // Bytes. Equivalent to SHA-1 (160 bits).
 
         if samples.len() < 2 * XOR_WINDOW_SIZE {
-            return 0.0; // Not enough data for meaningful calculation
+            return (-1.0, 0.0, 1.0); // Not enough data for meaningful calculation
         }
 
         let mut means = Vec::new();
@@ -46,7 +46,7 @@ impl Onod {
         let normal_dist = Normal::new(0.0, 1.0).expect("Failed to create Normal distribution");
         let p_value = 2.0 * (1.0 - normal_dist.cdf(z_score.abs()));
 
-        p_value
+        (mean_observed, z_score, p_value)
     }
 
 }

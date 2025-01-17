@@ -6,7 +6,7 @@ impl Onod {
 
     /// Shells randomness test
     /// Evaluates the uniformity of distances between identical byte values and returns a p-value.
-    pub fn shells(input: &[u8]) -> f64 {
+    pub fn shells(input: &[u8]) -> (f64, f64, f64) {
     
         // Define shell radii (precomputed to ensure equal volumes)
         const SHELL_RADII: [f64; 35] = [
@@ -24,8 +24,10 @@ impl Onod {
         let samples = convert_to_3d_points(input);
     
         if samples.len() < 25000 {
-            eprintln!("Shells test requires at least 25,000 points for statistical validity.");
-            return 0.0; // Skip the test for small datasets
+            // eprintln!("---------------------------------------------------------------");
+            // eprintln!("ERROR: Shells test requires at least 25,000 points for statistical validity. Skipping.");
+            // eprintln!("---------------------------------------------------------------");
+            return (-1.0, 0.0, 1.0); // Skip the test for small datasets
         }
     
         let sphere_radius = SHELL_RADII[0];
@@ -75,7 +77,12 @@ impl Onod {
         let chi_squared_dist = ChiSquared::new(degrees_of_freedom).expect("Failed to create ChiSquared distribution");
         let p_value = 1.0 - chi_squared_dist.cdf(chi_squared_stat);
     
-        p_value
+        // Z-score calculation (standardization of the chi-squared statistic)
+        let mean = degrees_of_freedom; // Mean of the chi-squared distribution
+        let std_dev = (2.0 * degrees_of_freedom).sqrt(); // Standard deviation of the chi-squared distribution
+        let z_score = (chi_squared_stat - mean) / std_dev;
+
+        (chi_squared_stat, z_score, p_value)
     }    
 }
 

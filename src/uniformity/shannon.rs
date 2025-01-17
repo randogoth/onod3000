@@ -5,11 +5,11 @@ use crate::Onod;
 impl Onod {
     /// Entropy randomness test
     /// Calculates the Shannon entropy of a byte slice and outputs a p-value.
-    pub fn shannon(samples: &[u8]) -> f64 {
+    pub fn shannon(samples: &[u8]) -> (f64, f64, f64) {
 
         let len = samples.len() as f64;
         if len == 0.0 {
-            return 0.0;
+            return (-1.0, 0.0, 1.0);
         }
 
         // Count occurrences of each byte
@@ -38,6 +38,6 @@ impl Onod {
         let normal_dist = Normal::new(0.0, 1.0).expect("Failed to create Normal distribution");
         let p_value = 2.0 * (1.0 - normal_dist.cdf(z_score.abs())); // Two-tailed test
 
-        p_value
+        (entropy, z_score, p_value)
     }
 }

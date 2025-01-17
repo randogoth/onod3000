@@ -14,10 +14,10 @@ impl Onod {
     // `kolmogorov_smirnov` crate, does not add jitter or handle ties in the same way, and
     // adheres to the crate's internal handling of floating-point comparisons. These differences
     // may result in slight variations in p-values or KS statistics between the two versions.
-    pub fn ks(samples: &[u8]) -> f64 {
+    pub fn ks(samples: &[u8]) -> (f64, f64, f64) {
 
         if samples.is_empty() {
-            return 0.0; // empty data
+            return (-1.0, 0.0, 1.0); // empty data
         }
 
         // Normalize the input samples to [0, 1] range
@@ -32,9 +32,16 @@ impl Onod {
         let confidence = 0.01; // Significance level
         let result = test_f64(&normalized_samples, &uniform_distribution, confidence);
 
-        // Extract p-value from the result
+        // Extract the KS statistic (D-statistic)
+        let ks_statistic = result.statistic;
+
+        // Calculate the z-score
+        let sample_size = normalized_samples.len() as f64;
+        let z_score = ks_statistic * sample_size.sqrt();
+
+        // Extract the p-value
         let p_value = 1.0 - result.reject_probability;
 
-        p_value
+        (ks_statistic, z_score, p_value)
     }
 }

@@ -189,7 +189,6 @@ version = "0.1.0"
 dependencies = [
  "flate2",
  "kolmogorov_smirnov",
- "rand_distr",
  "statrs",
 ]
 

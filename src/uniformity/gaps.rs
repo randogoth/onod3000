@@ -6,10 +6,10 @@ impl Onod {
 
     /// Gaps randomness test
     /// Analyzes the gaps between occurrences of a specific byte value and returns a p-value.
-    pub fn gaps(samples: &[u8]) -> f64 {
+    pub fn gaps(samples: &[u8]) -> (f64, f64, f64) {
     
         if samples.is_empty() {
-            return 0.0; // empty data
+            return (-1.0, 0.0, 1.0); // empty data
         }
     
         // Bin edges and expected frequencies from the Java implementation
@@ -41,7 +41,7 @@ impl Onod {
         }
     
         if all_gaps.is_empty() {
-            return 1.0; // No gaps found, assume randomness
+            return (-1.0, 0.0, 1.0); // No gaps found
         }
     
         // Create histogram of observed gaps
@@ -73,7 +73,12 @@ impl Onod {
         let chi_squared_dist = ChiSquared::new(degrees_of_freedom).expect("Failed to create ChiSquared distribution");
         let p_value = 1.0 - chi_squared_dist.cdf(chi_squared_stat);
     
-        p_value
+        // Z-score calculation (standardization of the chi-squared statistic)
+        let mean = degrees_of_freedom; // Mean of the chi-squared distribution
+        let std_dev = (2.0 * degrees_of_freedom).sqrt(); // Standard deviation of the chi-squared distribution
+        let z_score = (chi_squared_stat - mean) / std_dev;
+
+        (chi_squared_stat, z_score, p_value)
     }    
 
 }

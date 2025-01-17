@@ -6,10 +6,10 @@ impl Onod {
 
     /// Monobit randomness test
     /// Evaluates the balance of 0s and 1s in the binary representation of the data and returns a p-value.
-    pub fn monobit(samples: &[u8]) -> f64 {  
+    pub fn monobit(samples: &[u8]) -> (f64, f64, f64) {  
 
         if samples.is_empty() {
-            return 0.0; // Default to perfect randomness for empty data
+            return (-1.0, 0.0, 1.0); // Default to perfect randomness for empty data
         }
 
         // Count the total number of 1s in the dataset
@@ -35,6 +35,6 @@ impl Onod {
         let normal_dist = Normal::new(0.0, 1.0).expect("Failed to create Normal distribution");
         let p_value = 2.0 * (1.0 - normal_dist.cdf(z_score.abs()));
 
-        p_value
+        (observed_proportion, z_score, p_value)
     }
 }

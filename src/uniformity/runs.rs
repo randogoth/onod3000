@@ -6,10 +6,10 @@ impl Onod {
 
     /// Runs randomness test
     /// Evaluates the randomness by counting both increasing and decreasing runs and returns a p-value.
-    pub fn runs(samples: &[u8]) -> f64 {
+    pub fn runs(samples: &[u8]) -> (f64, f64, f64) {
 
         if samples.is_empty() {
-            return 0.0;
+            return (-1.0, 0.0, 1.0);
         }
 
         // Clone the samples to avoid modifying the original input
@@ -53,10 +53,10 @@ impl Onod {
         let p_value = 2.0 * (1.0 - normal_dist.cdf(z_score.abs()));
 
         if p_value.is_nan() {
-            return 0.0; // Return 0 if p-value is NaN
+            return (-1.0, 0.0, 1.0); // Return 0 if p-value is NaN
         }
 
-        p_value
+        (runs_observed as f64, z_score, p_value)
     }
 }
 

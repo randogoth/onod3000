@@ -8,19 +8,19 @@ impl Onod {
 
     /// Compression randomness test
     /// Estimates randomness by the compressibility of the data and returns a p-value.
-    pub fn compression(samples: &[u8]) -> f64 {
+    pub fn compression(samples: &[u8]) -> (f64, f64, f64) {
         if samples.is_empty() {
-            return 0.0; // Perfect randomness for empty data
+            return (-1.0, 0.0, 1.0); // Perfect randomness for empty data
         }
 
         // Compress the data using deflate
         let mut encoder = DeflateEncoder::new(Vec::new(), Compression::default());
         if encoder.write_all(samples).is_err() {
-            return 0.0; // Compression failed
+            return (-1.0, 0.0, 1.0); // Compression failed
         }
         let compressed_data = match encoder.finish() {
             Ok(data) => data,
-            Err(_) => return 0.0, // Compression failed
+            Err(_) => return (-1.0, 0.0, 1.0), // Compression failed
         };
 
         // Calculate compression ratio
@@ -37,6 +37,6 @@ impl Onod {
         let normal_dist = Normal::new(0.0, 1.0).expect("Failed to create Normal distribution");
         let p_value = 2.0 * (1.0 - normal_dist.cdf(z_score.abs())); // Two-tailed test
 
-        p_value
+        (compression_ratio, z_score, p_value)
     }
 }

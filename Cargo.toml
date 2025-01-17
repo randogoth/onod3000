@@ -6,5 +6,4 @@ edition = "2021"
 [dependencies]
 flate2 = "1.0.35"
 kolmogorov_smirnov = "1.1.0"
-rand_distr = "0.4.3"
 statrs = "0.18.0"

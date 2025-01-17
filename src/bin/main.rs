@@ -1,7 +1,6 @@
 use std::fs::File;
 use std::io::{self, Read};
 use std::path::Path;
-use statrs::distribution::{Normal, ContinuousCDF};
 
 use onod3000::Onod;
 
@@ -36,12 +35,16 @@ fn main() -> io::Result<()> {
         std::process::exit(1);
     }
 
-    println!("\nTesting {}", source);
-    println!("Testing {} bytes.", input_data.len());
-    println!("--------------------------------------");
+    println!("\nTesting {} bytes from {}.", input_data.len(), source);
+    println!("-----------------------------------------------------");
+    println!("Randomness Test     Observation  Z-Score P-Value Pass");
+    println!("-----------------------------------------------------");
 
-    let alpha = 0.01;
     let mut passed_tests = 0;
+    let alpha = 0.01;
+
+    // Create vectors to store results
+    let (mut observations, mut z_scores, mut p_values) = (Vec::new(), Vec::new(), Vec::new());
 
     // Run each test with the appropriate handling
     let tests = [
@@ -52,7 +55,7 @@ fn main() -> io::Result<()> {
         ("ChiByte",       Onod::chi_byte(&input_data)),
         ("MeanByte",      Onod::mean_byte(&input_data)),
         ("Compression",   Onod::compression(&input_data)),
-        ("KS",            Onod::ks(&input_data)),
+        ("Kolm.-Smirnov", Onod::ks(&input_data)),
         ("Pi",            Onod::pi(&input_data)),
         ("Shells",        Onod::shells(&input_data)),
         ("Gaps",          Onod::gaps(&input_data)),
@@ -63,47 +66,31 @@ fn main() -> io::Result<()> {
         ("UnCorrelation", Onod::un_correlation(&input_data)),
     ];
 
-    let mut p_values = Vec::new();
-
-    for (test_name, p_value) in tests.iter() {
-        let result = if *p_value >= alpha {
+    for (test_name, (observation, z_score, p_value)) in &tests {
+        let result = if *p_value >= alpha && *observation != -1.0 {
             passed_tests += 1;
-            "PASS"
+            "✅"
         } else {
-            "FAIL"
+            if *observation == -1.0 {
+                "SKIP"
+            } else {
+                "❌"
+            } 
         };
-    
-        println!("{:<20} p = {:.4},  {}", test_name, p_value, result);
-    
-        p_values.push(*p_value); // Dereference the value and push it
-    }    
 
-    // Calculate combined p-value using Fisher's method
-    let (combined_z_score, combined_p_value) = combined_score_stouffer(&p_values);
-    let overall_result = if combined_p_value >= alpha { "PASS" } else { "FAIL" };
+        println!(
+            "{:<15} {:>15.3}  {:>8.4}  {:.4}  {}",
+            test_name, observation, z_score, p_value, result
+        );
 
-    println!("--------------------------------------");
+        observations.push(*observation);
+        z_scores.push(*z_score);
+        p_values.push(*p_value);
+    }
+
+    println!("-----------------------------------------------------");
     println!("{}/{} tests passed.", passed_tests, tests.len());
-    println!("--------------------------------------");
-    println!("Combined Z-Score = {:.6}\nCombined P-Value = {:.6}\nOverall Result: {}", combined_z_score.abs(), combined_p_value, overall_result);
+    println!("-----------------------------------------------------");
 
     Ok(())
-}
-
-pub fn combined_score_stouffer(p_values: &[f64]) -> (f64, f64) {
-    let normal_dist = Normal::new(0.0, 1.0).expect("Failed to create Normal distribution");
-
-    // Calculate Z-scores for each p-value
-    let z_scores: Vec<f64> = p_values
-        .iter()
-        .map(|&p| normal_dist.inverse_cdf(1.0 - p))
-        .collect();
-
-    // Combine Z-scores
-    let combined_z = z_scores.iter().sum::<f64>() / (p_values.len() as f64).sqrt();
-
-    // Convert combined Z-score back to a p-value
-    let p_value = 2.0 * (1.0 - normal_dist.cdf(combined_z.abs())); // Two-tailed
-
-    (combined_z, p_value)
 }

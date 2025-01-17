@@ -6,11 +6,11 @@ impl Onod {
 
     /// Mean randomness test
     /// Calculates the p-value for the mean of the byte slice compared to expected mean.
-    pub fn mean_byte(samples: &[u8]) -> f64 {
+    pub fn mean_byte(samples: &[u8]) -> (f64, f64, f64) {
     
         let len = samples.len() as f64;
         if len == 0.0 {
-            return 0.0;
+            return (-1.0, 0.0, 1.0);
         }
     
         // Calculate observed mean
@@ -29,6 +29,6 @@ impl Onod {
         let normal_dist = Normal::new(0.0, 1.0).expect("Failed to create Normal distribution");
         let p_value = 2.0 * (1.0 - normal_dist.cdf(z_score.abs())); // Two-tailed test
     
-        p_value
+        (observed_mean, z_score, p_value)
     }
 }

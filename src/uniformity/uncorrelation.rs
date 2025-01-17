@@ -6,12 +6,12 @@ impl Onod {
 
     /// UnCorrelation randomness test
     /// Computes the Pearson correlation between the sequence and its shifted version, returning a p-value.
-    pub fn un_correlation(input: &[u8]) -> f64 {
+    pub fn un_correlation(input: &[u8]) -> (f64, f64, f64) {
 
         let samples = input.iter().map(|&x| x as i32).collect::<Vec<i32>>();
 
         if samples.len() < 2 {
-            return 0.0; // Default to perfect randomness for insufficient data
+            return (-1.0, 0.0, 1.0); // Default to perfect randomness for insufficient data
         }
 
         // Convert samples to f64 for correlation computation
@@ -51,7 +51,7 @@ impl Onod {
         let normal_dist = Normal::new(0.0, 1.0).expect("Failed to create Normal distribution");
         let p_value = 2.0 * (1.0 - normal_dist.cdf(t_stat.abs()));
 
-        p_value
+        (correlation, t_stat, p_value)
     }
 
 }

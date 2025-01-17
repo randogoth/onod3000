@@ -6,12 +6,12 @@ impl Onod {
 
     /// RunUps randomness test
     /// Evaluates the number of four-byte run-ups in the data and returns a p-value.
-    pub fn run_ups(input: &[u8]) -> f64 {
+    pub fn run_ups(input: &[u8]) -> (f64, f64, f64) {
 
         let samples = input.iter().map(|&x| x as u32).collect::<Vec<u32>>();
 
         if samples.len() < 4 {
-            return 0.0; // Not enough data for meaningful calculation
+            return (-1.0, 0.0, 1.0); // Not enough data for meaningful calculation
         }
 
         let mut test_statistic = 0;
@@ -39,6 +39,11 @@ impl Onod {
 
         let p_value = 1.0 - chi_squared_dist.cdf(chi_squared_stat);
 
-        p_value
+        // Z-score calculation (standardization of the chi-squared statistic)
+        let mean = 1.0; // Mean of the chi-squared distribution
+        let std_dev = (2.0 as f64).sqrt(); // Standard deviation of the chi-squared distribution
+        let z_score = (chi_squared_stat - mean) / std_dev;
+
+        (chi_squared_stat, z_score, p_value)
     }
 }

@@ -6,10 +6,10 @@ impl Onod {
 
     /// Prediction randomness test
     /// Evaluates the predictability of the next bit based on current data and returns a p-value.
-    pub fn prediction(samples: &[u8]) -> f64 {
+    pub fn prediction(samples: &[u8]) -> (f64, f64, f64) {
 
         if samples.is_empty() {
-            return 0.0;
+            return (-1.0, 0.0, 1.0);
         }
 
         let mut correct_predictions = 0;
@@ -29,7 +29,7 @@ impl Onod {
         }
 
         if total_predictions == 0 {
-            return 0.0; // No predictions possible
+            return (-1.0, 0.0, 1.0); // No predictions possible
         }
 
         // Calculate observed proportion of correct predictions
@@ -46,6 +46,6 @@ impl Onod {
         let normal_dist = Normal::new(0.0, 1.0).expect("Failed to create Normal distribution");
         let p_value = 2.0 * (1.0 - normal_dist.cdf(z_score.abs()));
 
-        p_value
+        (observed_proportion, z_score, p_value)
     }
 }

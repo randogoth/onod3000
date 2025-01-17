@@ -24,10 +24,10 @@ impl Onod {
     ///
     /// These differences are generally negligible for practical purposes and do not affect the overall functionality or 
     /// statistical significance of the test.
-    pub fn pi(samples: &[u8]) -> f64 {
+    pub fn pi(samples: &[u8]) -> (f64, f64, f64) {
     
         if samples.is_empty() {
-            return 0.0;
+            return (-1.0, 0.0, 1.0);
         }
     
         // Normalize samples to [0.0, 1.0)
@@ -61,7 +61,7 @@ impl Onod {
         let normal_dist = Normal::new(0.0, 1.0).expect("Failed to create Normal distribution");
         let p_value = 2.0 * (1.0 - normal_dist.cdf(z_score.abs()));
     
-        p_value
+        (test_statistic, z_score, p_value)
     }
 
 }
