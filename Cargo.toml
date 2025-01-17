@@ -15,3 +15,7 @@ statrs = "0.18.0"
 
 [features]
 python = ["dep:pyo3"]
+
+[[bin]]
+name="onod3000"
+file="src/bin/main.rs"

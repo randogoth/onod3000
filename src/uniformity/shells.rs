@@ -23,12 +23,12 @@ impl Onod {
 
         let samples = convert_to_3d_points(input);
     
-        if samples.len() < 25000 {
-            // eprintln!("---------------------------------------------------------------");
-            // eprintln!("ERROR: Shells test requires at least 25,000 points for statistical validity. Skipping.");
-            // eprintln!("---------------------------------------------------------------");
-            return (-1.0, 0.0, 1.0); // Skip the test for small datasets
-        }
+        // if samples.len() < 25000 {
+        //     // eprintln!("---------------------------------------------------------------");
+        //     // eprintln!("ERROR: Shells test requires at least 25,000 points for statistical validity. Skipping.");
+        //     // eprintln!("---------------------------------------------------------------");
+        //     return (-1.0, 0.0, 1.0); // Skip the test for small datasets
+        // }
     
         let sphere_radius = SHELL_RADII[0];
         let no_shells = SHELL_RADII.len();
