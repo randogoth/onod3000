@@ -62,7 +62,7 @@ fn main() -> io::Result<()> {
         ("Runs",          Onod::runs(&input_data)),
         ("RunUps",        Onod::run_ups(&input_data)),
         ("Prediction",    Onod::prediction(&input_data)),
-        ("UnCorrelation", Onod::un_correlation(&input_data)),
+        ("UnCorrelation", Onod::uncorrelation(&input_data)),
     ];
 
     for (test_name, (observation, z_score, p_value)) in &tests {

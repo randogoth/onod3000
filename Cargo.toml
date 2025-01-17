@@ -3,7 +3,15 @@ name = "onod3000"
 version = "0.1.0"
 edition = "2021"
 
+[lib]
+name = "onod3000"
+crate-type = ["cdylib", "lib"]
+
 [dependencies]
 flate2 = "1.0.35"
 kolmogorov_smirnov = "1.1.0"
+pyo3 = {version = "0.23.4", optional = true}
 statrs = "0.18.0"
+
+[features]
+python = ["dep:pyo3"]
