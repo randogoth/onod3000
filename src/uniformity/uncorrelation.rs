@@ -6,7 +6,7 @@ impl Onod {
 
     /// UnCorrelation randomness test
     /// Computes the Pearson correlation between the sequence and its shifted version, returning a p-value.
-    pub fn un_correlation(input: &[u8]) -> (f64, f64, f64) {
+    pub fn uncorrelation(input: &[u8]) -> (f64, f64, f64) {
 
         let samples = input.iter().map(|&x| x as i32).collect::<Vec<i32>>();
 
