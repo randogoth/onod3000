@@ -20,7 +20,7 @@
 
 ## Testing Methodology
 
-- **Null Hypothesis (\(H_0\))**: The data conforms to random behavior.
+- **Null Hypothesis**: The data conforms to random behavior.
 - **P-Value Interpretation**: Low p-values (< 0.01) indicate a significant deviation from randomness.
 
 All tests have been carefully ported from [Paul Uszak's Java code](http://www.reallyreallyrandom.com/gitbucketlabhub/) (ent3000-0.6.0-beta). Java libraries were substituted with Rust crate equivalents when possible. The suite includes the following tests:
