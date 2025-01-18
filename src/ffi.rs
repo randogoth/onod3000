@@ -26,14 +26,14 @@
 // Original work is licensed under the terms specified in the respective file header.
 
 
-use std::ffi::{c_char, c_double, c_uchar, CStr};
+use std::ffi::{c_char, c_double, CStr};
 
 use crate::Onod;
 
 #[no_mangle]
 pub extern "C" fn onod_run(
     test: *const c_char,
-    samples: *const c_uchar,
+    samples: *const u8,
     len: usize,
     result: *mut c_double,
 ) -> bool {
