@@ -1,51 +1,66 @@
-use statrs::distribution::{Normal, ContinuousCDF};
+use statrs::distribution::{ChiSquared, ContinuousCDF};
+
+/* 
+ * Blatantly copied from David Sexton's battery.
+ *
+ * An algorithm is used to predict the value of each byte of the sequence from 
+ * the beginning of the sequence to the end. In a random sequence the 
+ * probability of success of any such algorithm is 1/256. The number of successes 
+ * is counted. A chi-squared statistic is calculated. The degrees-of-freedom is 1. 
+ * The algorithm is as follows: the next byte is predicted to be equal to all the 
+ * previous bytes bitwise XORed together.
+ */
 
 use crate::Onod;
 
 impl Onod {
-
     /// Prediction randomness test
-    /// Evaluates the predictability of the next bit based on current data and returns a p-value.
+    /// Evaluates the predictability of the next byte based on XORing the previous bytes
+    /// and returns the total predictions, z-score, and p-value.
     pub fn prediction(samples: &[u8]) -> (f64, f64, f64) {
-
-        if samples.is_empty() {
-            return (-1.0, 0.0, 1.0);
+        if samples.len() < 3 {
+            return (-1.0, 0.0, 1.0); // Not enough data for meaningful calculation
         }
 
         let mut correct_predictions = 0;
         let mut total_predictions = 0;
 
-        for window in samples.windows(2) {
-            if let [current, next] = window {
-                let predicted = if current & 0x01 == 0 { 0 } else { 1 }; // Predict next bit based on LSB
-                let actual = next & 0x01; // Check LSB of the next byte
+        let mut prediction = samples[0]; // Start with the first byte
+        for i in 2..samples.len() {
+            prediction ^= samples[i - 1]; // XOR all preceding bytes
 
-                if predicted == actual {
-                    correct_predictions += 1;
-                }
-
-                total_predictions += 1;
+            if prediction == samples[i] {
+                correct_predictions += 1;
             }
+            total_predictions += 1;
         }
 
-        if total_predictions == 0 {
-            return (-1.0, 0.0, 1.0); // No predictions possible
-        }
+        // Calculate expected and observed frequencies
+        let expected = vec![
+            (1.0 / 256.0) * samples.len() as f64, // Probability of correct prediction
+            (255.0 / 256.0) * samples.len() as f64, // Probability of incorrect prediction
+        ];
+        let observed = vec![
+            correct_predictions as f64, // Actual correct predictions
+            (samples.len() - correct_predictions) as f64, // Actual incorrect predictions
+        ];
 
-        // Calculate observed proportion of correct predictions
-        let observed_proportion = correct_predictions as f64 / total_predictions as f64;
+        // Calculate chi-squared statistic
+        let chi_squared_stat: f64 = observed
+            .iter()
+            .zip(expected.iter())
+            .map(|(o, e)| (o - e).powi(2) / e)
+            .sum();
 
-        // Expected proportion for random data
-        let expected_proportion = 0.5;
-        let std_dev = (0.5 * 0.5 / total_predictions as f64).sqrt(); // Standard deviation for a binomial distribution
+        // Use Chi-Squared distribution to calculate p-value
+        let chi_squared_dist = ChiSquared::new(1.0).unwrap(); // Degrees of freedom = 1
+        let p_value = 1.0 - chi_squared_dist.cdf(chi_squared_stat);
 
-        // Calculate the z-score
-        let z_score = (observed_proportion - expected_proportion) / std_dev;
+        // Calculate z-score (optional, for diagnostics)
+        let mean = 1.0; // Mean of chi-squared distribution
+        let std_dev = (2.0 as f64).sqrt(); // Standard deviation of chi-squared distribution
+        let z_score = (chi_squared_stat - mean) / std_dev;
 
-        // Use normal distribution to calculate p-value
-        let normal_dist = Normal::new(0.0, 1.0).expect("Failed to create Normal distribution");
-        let p_value = 2.0 * (1.0 - normal_dist.cdf(z_score.abs()));
-
-        (observed_proportion, z_score, p_value)
+        (total_predictions as f64, z_score, p_value)
     }
 }

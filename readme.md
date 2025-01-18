@@ -95,43 +95,45 @@ To test the implementation three files of binary random data have been analyzed 
 
 ### Testing 1024 bytes from test1.bin (/dev/random)
 
-Test          | Java ent3000 | Rust onod3000 | Note |
-------------- | ------------ | ------------- | ---- |
-Shannon       | N/A          | 0.0000        |      |
-Monobit       | 0.8771       | 0.8771        |      |
-ChiBit        | 0.0949       | 0.0949        |      |
-ChiByte       | 0.1307       | 0.1307        |      |
-MeanByte      | 0.5378       | 0.5378        |      |
-Compression   | N/A          | 0.0146        |      |
-KS            | 0.5142       | 0.9814        | MISMATCH |
-Pi            | 0.4015       | 0.7293        | MISMATCH |
-Shells        | 0.5479       | 0.1470        | MISMATCH |
-Gaps          | 0.0000       | 0.0000        |      |
-Avalanche     | 0.9798       | 0.9798        |      |
-Runs          | 0.4916       | 0.4916        |      |
-RunUps        | 0.2573       | 0.2573        |      |
-Prediction    | 0.3164       | 0.1255        | MISMATCH |
-UnCorrelation | 0.4556       | 0.4554        |      |
+Test          | Java ent3000 | Rust onod3000 | Note          |
+------------- | ------------ | ------------- | ------------- |
+Shannon       | N/A          | 0.0000        |               |
+Monobit       | 0.6746       | 0.6746        |               |
+ChiBit        | 0.9299       | 0.9299        |               |
+ChiByte       | 0.9819       | 0.9819        |               |
+MeanByte      | 0.7964       | 0.7964        |               |
+Compression   | N/A          | 0.0146        |               |
+KS            | 0.5313       | 0.2476        | Mismatch      |
+Pi            | 0.3784       | 0.3784        |               |
+Shells        | 0.7559       | 0.7559        |               |
+Gaps          | 0.0000       | 0.0000        |               |
+Avalanche     | 0.8794       | 0.8794        |               |
+Runs          | 0.0850       | 0.0850        |               |
+RunUps        | 0.6537       | 0.6537        |               |
+Prediction    | 0.6164       | 0.6164        |               |
+UnCorrelation | 0.0921       | 0.0918        | Close enough  |
+
+Feel free to provide more results, and I'll continue updating the table!
 
 ### Testing 259,200 bytes from test2.bin (/dev/random)
 
-Test          | Java ent3000 | Rust onod3000 | Note |
-------------- | ------------ | ------------- | ---- |
-Shannon       | N/A          | 0.6912        |      |
-Monobit       | 0.0619       | 0.0619        |      |
-ChiBit        | 0.5461       | 0.5461        |      |
-ChiByte       | 0.4672       | 0.4672        |      |
-MeanByte      | 0.0500       | 0.0500        |      |
-Compression   | N/A          | 0.9308        |      |
-KS            | 0.9229       | 0.0028        | MISMATCH |
-Pi            | 0.2828       | 0.3953        | MISMATCH |
-Shells        | 0.4604       | 0.3163        | MISMATCH |
-Gaps          | 0.3854       | 0.3854        |      |
-Avalanche     | 0.9974       | 0.9974        |      |
-Runs          | 0.5873       | 0.5873        |      |
-RunUps        | 0.0402       | 0.0402        |      |
-Prediction    | 0.7409       | 0.3569        | MISMATCH |
-UnCorrelation | 0.0949       | 0.0949        |      |
+Test          | Java ent3000 | Rust onod3000 | Note          |
+------------- | ------------ | ------------- | ------------- |
+Shannon       | N/A          | 0.6853        |               |
+Monobit       | 0.2103       | 0.2103        |               |
+ChiBit        | 0.5590       | 0.5590        |               |
+ChiByte       | 0.3748       | 0.3748        |               |
+MeanByte      | 0.0183       | 0.0183        |               |
+Compression   | N/A          | 0.9308        |               |
+KS            | 0.2900       | 0.0178        | Mismatch      |
+Pi            | 0.9765       | 0.9765        |               |
+Shells        | 0.7235       | 0.7235        |               |
+Gaps          | 0.6425       | 0.6425        |               |
+Avalanche     | 0.9995       | 0.9995        |               |
+Runs          | 0.3310       | 0.3310        |               |
+RunUps        | 0.9393       | 0.9393        |               |
+Prediction    | 0.1519       | 0.1519        |               |
+UnCorrelation | 0.4497       | 0.4497        |               |
 
 ### Testing 259,200 bytes from test3.bin (Hardware QRNG)
 
@@ -143,22 +145,24 @@ ChiBit        | 0.8428       | 0.8428        |      |
 ChiByte       | 0.5785       | 0.5785        |      |
 MeanByte      | 0.9601       | 0.9601        |      |
 Compression   | N/A          | 0.9308        |      |
-KS            | 0.7395       | 0.0247        | MISMATCH |
-Pi            | 0.2806       | 0.0189        | MISMATCH |
-Shells        | 0.7711       | 0.3254        | MISMATCH |
+KS            | 0.7395       | 0.0441        | Mismatch |
+Pi            | 0.2806       | 0.2806        |      |
+Shells        | 0.7711       | 0.7711        |      |
 Gaps          | 0.1937       | 0.1937        |      |
 Avalanche     | 0.9932       | 0.9932        |      |
 Runs          | 0.2500       | 0.2500        |      |
 RunUps        | 0.9710       | 0.9710        |      |
-Prediction    | 0.7173       | 0.7399        | MISMATCH |
+Prediction    | 0.7173       | 0.7173        |      |
 UnCorrelation | 0.4674       | 0.4674        |      |
 
-The port is work in progress and effort will be put into rigorously re-evaluating the implementations. Although the implementation of the randomness tests closely follows the original Java logic, minor differences in the results arise in some of the tests.
-
-Java emphasizes predictability and portability, enforcing strict IEEE 754 behavior across platforms. Rust prioritizes performance and flexibility, allowing platform-specific optimizations that may deviate slightly from strict IEEE semantics.
+Although the implementation of the randomness tests closely follows the original Java logic, differences in the results arise in the Kolmogorov-Smirnov test. The external libraries used for running the test probably differ in their implementation. Also the uniform distribution to test against is provided by the Apache Commons Math library. Since it would be way beyond the scope of this porting project to try to fully match the functionality of the dependencies used we just accept the minor difference. Another issue might be that Java emphasizes predictability and portability, enforcing strict IEEE 754 behavior across platforms. Rust on the other hand prioritizes performance and flexibility, allowing platform-specific optimizations that may deviate slightly from strict IEEE semantics.
 
 These differences are generally negligible for practical purposes and do not affect the overall functionality or 
 statistical significance of the test.
+
+### Bonus
+
+We implemented a Well Equidistributed Long-period Linear pseudo-random number generator that is used with a random seed derived from an epoch timestamp that is being used as uniform distribution for the KS test.
 
 ## License
 

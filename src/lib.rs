@@ -1,6 +1,8 @@
 pub struct Onod;
 
 mod uniformity;
+pub mod chisquaretest;
+pub mod well19937c;
 pub mod ffi;
 #[cfg(feature = "python")]
 pub mod python;
