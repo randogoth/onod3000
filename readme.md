@@ -91,7 +91,7 @@ maturin build --release --features python
 
 ## Comparison
 
-To test the implementation three files of binary random data have been analyzed using the original Java program and this Rust port expecting the same p-values.
+To test the implementation three files of binary random data have been analyzed using the original Java program (version 0.6.0-beta) and this Rust port, expecting the same p-values. The test files can be found in the test folder.
 
 ### Testing 1024 bytes from test1.bin (/dev/random)
 
@@ -154,6 +154,8 @@ Runs          | 0.2500       | 0.2500        |      |
 RunUps        | 0.9710       | 0.9710        |      |
 Prediction    | 0.7173       | 0.7173        |      |
 UnCorrelation | 0.4674       | 0.4674        |      |
+
+### Conclusions
 
 Although the implementation of the randomness tests closely follows the original Java logic, differences in the results arise in the Kolmogorov-Smirnov test. The external libraries used for running the test probably differ in their implementation. Also the uniform distribution to test against is provided by the Apache Commons Math library. Since it would be way beyond the scope of this porting project to try to fully match the functionality of the dependencies used we just accept the minor difference. Another issue might be that Java emphasizes predictability and portability, enforcing strict IEEE 754 behavior across platforms. Rust on the other hand prioritizes performance and flexibility, allowing platform-specific optimizations that may deviate slightly from strict IEEE semantics.
 
