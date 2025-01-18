@@ -193,3 +193,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+
+## Credits
+
+This work was made possible with the invaluable assistance of OpenAI's ChatGPT, which provided guidance, debugging help, and inspiration throughout the development process.
