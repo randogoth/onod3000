@@ -5,7 +5,7 @@ edition = "2021"
 
 [lib]
 name = "onod3000"
-crate-type = ["cdylib", "lib"]
+crate-type = ["cdylib", "staticlib", "lib"]
 
 [dependencies]
 flate2 = "1.0.35"
@@ -19,3 +19,8 @@ python = ["dep:pyo3"]
 [[bin]]
 name="onod3000"
 file="src/bin/onod3000.rs"
+
+[profile.release]
+lto = true
+codegen-units = 1
+panic = "abort"
